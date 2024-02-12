@@ -20,9 +20,6 @@
         "backgroundColor": "#ffffff"
       },
       "package": "expo.modules.androidaccountmanager.example"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

@@ -4,8 +4,7 @@ import {
   Subscription,
 } from "expo-modules-core";
 
-// Import the native module. On web, it will be resolved to ExpoAndroidAccountManager.web.ts
-// and on native platforms to ExpoAndroidAccountManager.ts
+// Import the native module
 import {
   ChangeEventPayload,
   ExpoAndroidAccountManagerViewProps,
