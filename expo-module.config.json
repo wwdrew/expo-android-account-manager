@@ -1,9 +1,10 @@
 {
-  "platforms": ["ios", "android", "web"],
-  "ios": {
-    "modules": ["ExpoAndroidAccountManagerModule"]
-  },
+  "platforms": [
+    "android"
+  ],
   "android": {
-    "modules": ["expo.modules.androidaccountmanager.ExpoAndroidAccountManagerModule"]
+    "modules": [
+      "expo.modules.androidaccountmanager.ExpoAndroidAccountManagerModule"
+    ]
   }
 }
