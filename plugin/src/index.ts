@@ -12,7 +12,8 @@ const withAccountManagerService: ConfigPlugin = (expoConfig) => {
 
     const service = {
       $: {
-        "android:name": ".ExpoAccountManagerService",
+        "android:name":
+          "expo.modules.androidaccountmanager.ExpoAccountManagerAuthenticatorService",
         "android:exported": "false" as AndroidConfig.Manifest.StringBoolean,
       },
       "intent-filter": [
