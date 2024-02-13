@@ -12,8 +12,7 @@ export const withAuthenticatorXml: ConfigPlugin = (config) => {
         throw new Error("Package name not found in Expo config");
       }
 
-      const authenticatorXml = `
-<?xml version="1.0" encoding="utf-8"?>
+      const authenticatorXml = `<?xml version="1.0" encoding="utf-8"?>
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountType="${packageName}"
     android:icon="@mipmap/ic_launcher"
