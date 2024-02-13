@@ -20,5 +20,15 @@ class ExpoAndroidAccountManagerModule : Module() {
       val accounts = accountManager.accounts.map { it.name }
       accounts.toTypedArray()
     }
+
+    Function("getAccountsByType") { accountType: String? ->
+      if (accountType == null) {
+      throw IllegalArgumentException("Account type is required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val accounts = accountManager.getAccountsByType(accountType).map { it.name }
+      accounts.toTypedArray()
+    }
   }
 }
