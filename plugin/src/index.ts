@@ -1,52 +1,13 @@
-import {
-  AndroidConfig,
-  ConfigPlugin,
-  withAndroidManifest,
-} from "expo/config-plugins";
+import { ConfigPlugin } from "@expo/config-plugins";
 
-const withAccountManagerService: ConfigPlugin = (expoConfig) => {
-  expoConfig = withAndroidManifest(expoConfig, (config) => {
-    const { getMainApplicationOrThrow } = AndroidConfig.Manifest;
+import { withAccountManagerService } from "./android/withAccountManagerService";
+import { withAuthenticatorXml } from "./android/withAuthenticatorXml";
 
-    const mainApplication = getMainApplicationOrThrow(config.modResults);
+export const withAccountManagerConfig: ConfigPlugin = (config) => {
+  config = withAccountManagerService(config);
+  config = withAuthenticatorXml(config);
 
-    const service = {
-      $: {
-        "android:name":
-          "expo.modules.androidaccountmanager.ExpoAccountManagerAuthenticatorService",
-        "android:exported": "false" as AndroidConfig.Manifest.StringBoolean,
-      },
-      "intent-filter": [
-        {
-          action: [
-            {
-              $: {
-                "android:name": "android.accounts.AccountAuthenticator",
-              },
-            },
-          ],
-        },
-      ],
-      "meta-data": [
-        {
-          $: {
-            "android:name": "android.accounts.AccountAuthenticator",
-            "android:resource": "@xml/authenticator",
-          },
-        },
-      ],
-    };
-
-    if (mainApplication.service) {
-      mainApplication.service.push(service);
-    } else {
-      mainApplication.service = [service];
-    }
-
-    return config;
-  });
-
-  return expoConfig;
+  return config;
 };
 
-export default withAccountManagerService;
+export default withAccountManagerConfig;
