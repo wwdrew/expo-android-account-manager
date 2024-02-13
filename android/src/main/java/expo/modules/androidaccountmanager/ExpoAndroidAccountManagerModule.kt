@@ -1,5 +1,6 @@
 package expo.modules.androidaccountmanager
 
+import android.accounts.Account
 import android.accounts.AccountManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -29,6 +30,17 @@ class ExpoAndroidAccountManagerModule : Module() {
       val accountManager = AccountManager.get(context)
       val accounts = accountManager.getAccountsByType(accountType).map { it.name }
       accounts.toTypedArray()
+    }
+
+    Function("addAccountExplicitly") { accountType: String?, accountName: String?, password: String? ->
+      if (accountName == null || accountType == null || password == null) {
+        throw IllegalArgumentException("All parameters are required.")
+      }
+
+      val account = Account(accountName, accountType)
+      val accountManager = AccountManager.get(context)
+      val success = accountManager.addAccountExplicitly(account, password, null)
+      success
     }
   }
 }

@@ -9,3 +9,15 @@ export function getAccounts(): Account[] {
 export function getAccountsByType(type: string): Account[] {
   return ExpoAndroidAccountManagerModule.getAccountsByType(type);
 }
+
+export function addAccountExplicitly(
+  accountType: string,
+  accountName: string,
+  password: string,
+): boolean {
+  return ExpoAndroidAccountManagerModule.addAccountExplicitly(
+    accountType,
+    accountName,
+    password,
+  );
+}
