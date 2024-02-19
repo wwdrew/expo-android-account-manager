@@ -6,7 +6,7 @@ export default function AccountDetailScreen() {
 
   return (
     <View>
-      <Stack.Screen options={{ title: name }} />
+      <Stack.Screen options={{ title: typeof name === "string" ? name : "" }} />
       <Text>Account Detail</Text>
       <Text>Name: {name}</Text>
     </View>
