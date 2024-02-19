@@ -4,12 +4,13 @@ import {
   Account,
   removeAccount,
 } from "expo-android-account-manager";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
 
-export default function App() {
+export default function AccountManagerHomeScreen() {
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   useEffect(() => {
@@ -56,12 +57,9 @@ export default function App() {
       <Text>Accounts:</Text>
       {accounts.length === 0 && <Text>No accounts</Text>}
       {accounts.map((account) => (
-        <Text
-          onPress={() => handleRemoveAccount(account.name)}
-          key={account.name}
-        >
-          {account.name}
-        </Text>
+        <Link href={`/account/${account.name}`} key={account.name}>
+          <Text>{account.name}</Text>
+        </Link>
       ))}
     </View>
   );
