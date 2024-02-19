@@ -2,6 +2,8 @@ package expo.modules.androidaccountmanager
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import com.facebook.react.bridge.WritableNativeArray
+import com.facebook.react.bridge.WritableNativeMap
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -13,13 +15,11 @@ class ExpoAndroidAccountManagerModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoAndroidAccountManager")
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
     Function("getAccounts") {
       val accountManager = AccountManager.get(context)
-      val accounts = accountManager.accounts.map { it.name }
-      accounts.toTypedArray()
+      val accounts = accountManager.accounts
+
+      convertAccountsToWritableArray(accounts)
     }
 
     Function("getAccountsByType") { accountType: String? ->
@@ -28,8 +28,9 @@ class ExpoAndroidAccountManagerModule : Module() {
       }
 
       val accountManager = AccountManager.get(context)
-      val accounts = accountManager.getAccountsByType(accountType).map { it.name }
-      accounts.toTypedArray()
+      val accounts = accountManager.getAccountsByType(accountType)
+
+      convertAccountsToWritableArray(accounts)
     }
 
     Function("addAccountExplicitly") { accountType: String?, accountName: String?, password: String? ->
@@ -39,8 +40,66 @@ class ExpoAndroidAccountManagerModule : Module() {
 
       val account = Account(accountName, accountType)
       val accountManager = AccountManager.get(context)
-      val success = accountManager.addAccountExplicitly(account, password, null)
-      success
+
+      accountManager.addAccountExplicitly(account, password, null)
     }
+
+    Function("removeAccount") { accountName: String, accountType: String ->
+      if (accountName.isBlank() || accountType.isBlank()) {
+        throw IllegalArgumentException("Account name and type are required.")
+      }
+
+      val account = Account(accountName, accountType)
+      val accountManager = AccountManager.get(context)
+
+      accountManager.removeAccount(account, null, null, null)
+    }
+
+    Function("setAuthToken") { accountName: String, accountType: String, authToken: String ->
+      if (accountName.isBlank() || accountType.isBlank() || authToken.isBlank()) {
+        throw IllegalArgumentException("Account name, type, and auth token are required.")
+      }
+
+      val account = Account(accountName, accountType)
+      val accountManager = AccountManager.get(context)
+
+      accountManager.setAuthToken(account, accountType, authToken)
+    }
+
+    Function("setUserData") { accountName: String, accountType: String, key: String, value: String ->
+      if (accountName.isBlank() || accountType.isBlank() || key.isBlank() || value.isBlank()) {
+        throw IllegalArgumentException("Account name, type, key, and value are required.")
+      }
+
+      val account = Account(accountName, accountType)
+      val accountManager = AccountManager.get(context)
+
+      accountManager.setUserData(account, key, value)
+    }
+
+    Function("peekAuthToken") { accountName: String, accountType: String ->
+      if (accountName.isBlank() || accountType.isBlank()) {
+        throw IllegalArgumentException("Account name and type are required.")
+      }
+
+      val account = Account(accountName, accountType)
+      val accountManager = AccountManager.get(context)
+
+      val authToken = accountManager.peekAuthToken(account, accountType)
+      authToken
+    }
+  }
+
+  private fun convertAccountsToWritableArray(accounts: Array<Account>): WritableNativeArray {
+    val result = WritableNativeArray()
+
+    for (account in accounts) {
+      val map = WritableNativeMap()
+      map.putString("name", account.name)
+      map.putString("type", account.type)
+      result.pushMap(map)
+    }
+
+    return result
   }
 }
