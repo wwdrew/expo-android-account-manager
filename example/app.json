@@ -2,6 +2,7 @@
   "expo": {
     "name": "expo-android-account-manager-example",
     "slug": "expo-android-account-manager-example",
+    "scheme": "expo-android-account-manager-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,6 +22,9 @@
       },
       "package": "expo.modules.androidaccountmanager.example"
     },
-    "plugins": ["../app.plugin.js"]
+    "plugins": [
+      "../app.plugin.js",
+      "expo-router"
+    ]
   }
 }
