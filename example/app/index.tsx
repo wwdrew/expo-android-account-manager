@@ -7,7 +7,7 @@ import { Link, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
-const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
+export const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
 
 function CreateRandomAccount({ callback }: { callback: () => void }) {
   function createRandomAccount() {
