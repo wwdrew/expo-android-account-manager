@@ -29,16 +29,27 @@ export function addAccountExplicitly(
   );
 }
 
-export function removeAccount(account: Account) {
-  ExpoAndroidAccountManagerModule.removeAccount(account);
+export function removeAccountExplicitly(account: Account) {
+  ExpoAndroidAccountManagerModule.removeAccountExplicitly(account);
 }
 
 export function setAuthToken(
   account: Account,
-  accountType: string,
+  authTokenType: string,
   authToken: string,
 ) {
-  ExpoAndroidAccountManagerModule.setAuthToken(account, accountType, authToken);
+  ExpoAndroidAccountManagerModule.setAuthToken(
+    account,
+    authTokenType,
+    authToken,
+  );
+}
+
+export function peekAuthToken(
+  account: Account,
+  authTokenType: string,
+): string | null {
+  return ExpoAndroidAccountManagerModule.peekAuthToken(account, authTokenType);
 }
 
 export function setUserData(account: Account, key: string, value: string) {
@@ -46,9 +57,5 @@ export function setUserData(account: Account, key: string, value: string) {
 }
 
 export function getUserData(account: Account, key: string): string {
-  return ExpoAndroidAccountManagerModule.setUserData(account, key);
-}
-
-export function peekAuthToken(account: Account, accountType: string): string {
-  return ExpoAndroidAccountManagerModule.peekAuthToken(account, accountType);
+  return ExpoAndroidAccountManagerModule.getUserData(account, key);
 }
