@@ -5,7 +5,7 @@ import {
 } from "expo-android-account-manager";
 import { Link, Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
 
@@ -31,6 +31,14 @@ function CreateRandomAccount({ callback }: { callback: () => void }) {
   return <Text onPress={createRandomAccount}>Create</Text>;
 }
 
+function ItemSeparator() {
+  return (
+    <View
+      style={{ height: StyleSheet.hairlineWidth, backgroundColor: "black" }}
+    />
+  );
+}
+
 export default function AccountManagerHomeScreen() {
   const [accounts, setAccounts] = useState<Account[]>([]);
 
@@ -53,15 +61,19 @@ export default function AccountManagerHomeScreen() {
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <Link
+            asChild
             key={item.name}
             href={{
               pathname: "/account/[name]",
               params: { name: item.name },
             }}
           >
-            {item.name}
+            <Pressable style={styles.accountItem}>
+              <Text>{item.name}</Text>
+            </Pressable>
           </Link>
         )}
+        ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={<Text>No accounts</Text>}
       />
     </View>
@@ -72,5 +84,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  accountItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
 });
