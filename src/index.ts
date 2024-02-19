@@ -2,6 +2,13 @@
 import { Account } from "./ExpoAndroidAccountManager.types";
 import ExpoAndroidAccountManagerModule from "./ExpoAndroidAccountManagerModule";
 
+export const KEY_ACCOUNT_NAME: string =
+  ExpoAndroidAccountManagerModule.KEY_ACCOUNT_NAME;
+export const KEY_PASSWORD: string =
+  ExpoAndroidAccountManagerModule.KEY_PASSWORD;
+export const KEY_AUTHTOKEN: string =
+  ExpoAndroidAccountManagerModule.KEY_AUTHTOKEN;
+
 export function getAccounts(): Account[] {
   return ExpoAndroidAccountManagerModule.getAccounts();
 }

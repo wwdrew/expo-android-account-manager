@@ -15,6 +15,14 @@ class ExpoAndroidAccountManagerModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoAndroidAccountManager")
 
+    Constants {
+      return@Constants mapOf(
+        "KEY_ACCOUNT_NAME" to AccountManager.KEY_ACCOUNT_NAME,
+        "KEY_PASSWORD" to AccountManager.KEY_PASSWORD,
+        "KEY_AUTHTOKEN" to AccountManager.KEY_AUTHTOKEN
+      )
+    }
+
     Function("getAccounts") {
       val accountManager = AccountManager.get(context)
       val accounts = accountManager.accounts
