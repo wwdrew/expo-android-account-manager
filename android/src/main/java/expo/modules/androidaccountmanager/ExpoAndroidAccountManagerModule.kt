@@ -57,13 +57,13 @@ class ExpoAndroidAccountManagerModule : Module() {
       accountManager.addAccountExplicitly(account, password, null)
     }
 
-    Function("removeAccount") { accountParamsMap: ReadableMap ->
+    Function("removeAccountExplicitly") { accountParamsMap: ReadableMap ->
       val accountParams = mapToAccountParams(accountParamsMap)
 
       val accountManager = AccountManager.get(context)
       val account = Account(accountParams.name, accountParams.type)
 
-      accountManager.removeAccount(account, null, null, null)
+      accountManager.removeAccountExplicitly(account)
     }
 
     Function("setAuthToken") { accountParamsMap: ReadableMap, authTokenType: String, authToken: String ->
@@ -77,6 +77,19 @@ class ExpoAndroidAccountManagerModule : Module() {
       val account = Account(accountParams.name, accountParams.type)
 
       accountManager.setAuthToken(account, authTokenType, authToken)
+    }
+
+    Function("peekAuthToken") { accountParamsMap: ReadableMap, authTokenType: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank()) {
+        throw IllegalArgumentException("AccountParams and key are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.peekAuthToken(account, authTokenType)
     }
 
     Function("setUserData") { accountParamsMap: ReadableMap, key: String, value: String ->
@@ -103,19 +116,6 @@ class ExpoAndroidAccountManagerModule : Module() {
       val account = Account(accountParams.name, accountParams.type)
 
       accountManager.getUserData(account, key)
-    }
-
-    Function("peekAuthToken") { accountParamsMap: ReadableMap, authTokenType: String ->
-      val accountParams = mapToAccountParams(accountParamsMap)
-
-      if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank()) {
-        throw IllegalArgumentException("AccountParams and key are required.")
-      }
-
-      val accountManager = AccountManager.get(context)
-      val account = Account(accountParams.name, accountParams.type)
-
-      accountManager.peekAuthToken(account, authTokenType)
     }
   }
 
