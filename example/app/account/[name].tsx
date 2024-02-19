@@ -19,7 +19,10 @@ export default function AccountDetailScreen() {
 
   function handleRemovePress() {
     try {
-      removeAccountExplicitly({ name, type: ACCOUNT_TYPE });
+      removeAccountExplicitly({
+        name: typeof name === "string" ? name : "",
+        type: ACCOUNT_TYPE,
+      });
       navigation.goBack();
     } catch (error) {
       console.log({ error });
@@ -28,7 +31,10 @@ export default function AccountDetailScreen() {
 
   function handlePeekAuthTokenPress() {
     const authToken = peekAuthToken(
-      { name, type: ACCOUNT_TYPE },
+      {
+        name: typeof name === "string" ? name : "",
+        type: ACCOUNT_TYPE,
+      },
       KEY_AUTHTOKEN,
     );
 
@@ -36,17 +42,37 @@ export default function AccountDetailScreen() {
   }
 
   function handleSetAuthTokenPress() {
-    setAuthToken({ name, type: ACCOUNT_TYPE }, KEY_AUTHTOKEN, "authToken");
+    setAuthToken(
+      {
+        name: typeof name === "string" ? name : "",
+        type: ACCOUNT_TYPE,
+      },
+      KEY_AUTHTOKEN,
+      "authToken",
+    );
   }
 
   function handleGetUserDataPress() {
-    const userData = getUserData({ name, type: ACCOUNT_TYPE }, DATA_KEY);
+    const userData = getUserData(
+      {
+        name: typeof name === "string" ? name : "",
+        type: ACCOUNT_TYPE,
+      },
+      DATA_KEY,
+    );
 
     console.log({ userData });
   }
 
   function handleSetUserDataPress() {
-    setUserData({ name, type: ACCOUNT_TYPE }, DATA_KEY, "user data");
+    setUserData(
+      {
+        name: typeof name === "string" ? name : "",
+        type: ACCOUNT_TYPE,
+      },
+      DATA_KEY,
+      "user data",
+    );
   }
 
   return (
