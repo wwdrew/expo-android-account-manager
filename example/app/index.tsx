@@ -5,7 +5,7 @@ import {
 } from "expo-android-account-manager";
 import { Link, Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
 
@@ -48,18 +48,22 @@ export default function AccountManagerHomeScreen() {
           ),
         }}
       />
-      {accounts.length === 0 && <Text>No accounts</Text>}
-      {accounts.map((account) => (
-        <Link
-          key={account.name}
-          href={{
-            pathname: "/account/[name]",
-            params: { name: account.name },
-          }}
-        >
-          {account.name}
-        </Link>
-      ))}
+      <FlatList
+        data={accounts}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <Link
+            key={item.name}
+            href={{
+              pathname: "/account/[name]",
+              params: { name: item.name },
+            }}
+          >
+            {item.name}
+          </Link>
+        )}
+        ListEmptyComponent={<Text>No accounts</Text>}
+      />
     </View>
   );
 }
