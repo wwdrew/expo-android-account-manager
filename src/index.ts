@@ -2,6 +2,8 @@
 import { Account } from "./ExpoAndroidAccountManager.types";
 import ExpoAndroidAccountManagerModule from "./ExpoAndroidAccountManagerModule";
 
+export * from "./ExpoAndroidAccountManager.types";
+
 export const KEY_ACCOUNT_NAME: string =
   ExpoAndroidAccountManagerModule.KEY_ACCOUNT_NAME;
 export const KEY_PASSWORD: string =
@@ -18,51 +20,35 @@ export function getAccountsByType(type: string): Account[] {
 }
 
 export function addAccountExplicitly(
-  accountType: string,
-  accountName: string,
+  account: Account,
   password: string,
 ): boolean {
   return ExpoAndroidAccountManagerModule.addAccountExplicitly(
-    accountType,
-    accountName,
+    account,
     password,
   );
 }
 
-export function removeAccount(accountName: string, accountType: string) {
-  ExpoAndroidAccountManagerModule.removeAccount(accountName, accountType);
+export function removeAccount(account: Account) {
+  ExpoAndroidAccountManagerModule.removeAccount(account);
 }
 
 export function setAuthToken(
-  accountName: string,
+  account: Account,
   accountType: string,
   authToken: string,
 ) {
-  ExpoAndroidAccountManagerModule.setAuthToken(
-    accountName,
-    accountType,
-    authToken,
-  );
+  ExpoAndroidAccountManagerModule.setAuthToken(account, accountType, authToken);
 }
 
-export function setUserData(
-  accountName: string,
-  accountType: string,
-  key: string,
-  value: string,
-) {
-  ExpoAndroidAccountManagerModule.setUserData(
-    accountName,
-    accountType,
-    key,
-    value,
-  );
+export function setUserData(account: Account, key: string, value: string) {
+  ExpoAndroidAccountManagerModule.setUserData(account, key, value);
 }
 
-export function peekAuthToken(accountName: string, accountType: string) {
-  const authToken = ExpoAndroidAccountManagerModule.peekAuthToken(
-    accountName,
-    accountType,
-  );
-  return authToken;
+export function getUserData(account: Account, key: string): string {
+  return ExpoAndroidAccountManagerModule.setUserData(account, key);
+}
+
+export function peekAuthToken(account: Account, accountType: string): string {
+  return ExpoAndroidAccountManagerModule.peekAuthToken(account, accountType);
 }

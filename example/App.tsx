@@ -1,13 +1,13 @@
 import {
   getAccounts,
-  getAccountsByType,
   addAccountExplicitly,
+  Account,
+  removeAccount,
 } from "expo-android-account-manager";
-import { Account } from "expo-android-account-manager/ExpoAndroidAccountManager.types";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
-const SONGKICK_TYPE = "com.songkick";
+const ACCOUNT_TYPE = "expo.modules.androidaccountmanager.example";
 
 export default function App() {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -22,11 +22,13 @@ export default function App() {
 
     try {
       const success = addAccountExplicitly(
-        `expo.modules.androidaccountmanager.example`,
-        `account-name-${random}`,
+        {
+          name: `account-name-${random}`,
+          type: ACCOUNT_TYPE,
+        },
         "password",
       );
-      console.log(`added $random: ${success}`);
+      console.log(`added ${random}: ${success}`);
       console.log("getAccounts: ", getAccounts());
       setAccounts(getAccounts());
     } catch (error) {
@@ -34,18 +36,32 @@ export default function App() {
     }
   }
 
-  function createSongkickAccount() {
-    console.log("createAccount: ", SONGKICK_TYPE);
-    console.log("getAccountsByType: ", getAccountsByType(SONGKICK_TYPE));
+  function handleRemoveAccount(accountName: string) {
+    console.log("remove account: ", accountName);
+    try {
+      removeAccount({
+        name: accountName,
+        type: ACCOUNT_TYPE,
+      });
+
+      setAccounts(getAccounts());
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
     <View style={styles.container}>
       <Button onPress={createRandomAccount} title="Create random account" />
-      <Button onPress={createSongkickAccount} title="Create Songkick account" />
       <Text>Accounts:</Text>
+      {accounts.length === 0 && <Text>No accounts</Text>}
       {accounts.map((account) => (
-        <Text key={account.name}>{account.name}</Text>
+        <Text
+          onPress={() => handleRemoveAccount(account.name)}
+          key={account.name}
+        >
+          {account.name}
+        </Text>
       ))}
     </View>
   );
