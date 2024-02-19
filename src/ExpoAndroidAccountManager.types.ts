@@ -1,7 +1,4 @@
-export type ChangeEventPayload = {
-  value: string;
-};
-
-export type ExpoAndroidAccountManagerViewProps = {
+export interface Account {
   name: string;
-};
+  type: string;
+}

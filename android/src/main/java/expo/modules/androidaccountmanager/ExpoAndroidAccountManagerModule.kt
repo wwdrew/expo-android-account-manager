@@ -1,47 +1,141 @@
 package expo.modules.androidaccountmanager
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeArray
+import com.facebook.react.bridge.WritableNativeMap
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
+data class AccountParams(val name: String, val type: String)
+
 class ExpoAndroidAccountManagerModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+
+  private val context
+    get() = requireNotNull(appContext.reactContext)
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoAndroidAccountManager')` in JavaScript.
     Name("ExpoAndroidAccountManager")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
-
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
+    Constants {
+      return@Constants mapOf(
+        "KEY_ACCOUNT_NAME" to AccountManager.KEY_ACCOUNT_NAME,
+        "KEY_PASSWORD" to AccountManager.KEY_PASSWORD,
+        "KEY_AUTHTOKEN" to AccountManager.KEY_AUTHTOKEN
+      )
     }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+    Function("getAccounts") {
+      val accountManager = AccountManager.get(context)
+      val accounts = accountManager.accounts
+
+      convertAccountsToWritableArray(accounts)
     }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoAndroidAccountManagerView::class) {
-      // Defines a setter for the `name` prop.
-      Prop("name") { view: ExpoAndroidAccountManagerView, prop: String ->
-        println(prop)
+    Function("getAccountsByType") { accountType: String? ->
+      if (accountType == null) {
+        throw IllegalArgumentException("Account type is required.")
       }
+
+      val accountManager = AccountManager.get(context)
+      val accounts = accountManager.getAccountsByType(accountType)
+
+      convertAccountsToWritableArray(accounts)
     }
+
+    Function("addAccountExplicitly") { accountParamsMap: ReadableMap, password: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || password.isBlank()) {
+        throw IllegalArgumentException("Account and password are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.addAccountExplicitly(account, password, null)
+    }
+
+    Function("removeAccountExplicitly") { accountParamsMap: ReadableMap ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.removeAccountExplicitly(account)
+    }
+
+    Function("setAuthToken") { accountParamsMap: ReadableMap, authTokenType: String, authToken: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank() || authToken.isBlank()) {
+        throw IllegalArgumentException("Account and password are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.setAuthToken(account, authTokenType, authToken)
+    }
+
+    Function("peekAuthToken") { accountParamsMap: ReadableMap, authTokenType: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank()) {
+        throw IllegalArgumentException("AccountParams and key are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.peekAuthToken(account, authTokenType)
+    }
+
+    Function("setUserData") { accountParamsMap: ReadableMap, key: String, value: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || key.isBlank() || value.isBlank()) {
+        throw IllegalArgumentException("Account and password are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.setUserData(account, key, value)
+    }
+
+    Function("getUserData") { accountParamsMap: ReadableMap, key: String ->
+      val accountParams = mapToAccountParams(accountParamsMap)
+
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || key.isBlank()) {
+        throw IllegalArgumentException("Account and key are required.")
+      }
+
+      val accountManager = AccountManager.get(context)
+      val account = Account(accountParams.name, accountParams.type)
+
+      accountManager.getUserData(account, key)
+    }
+  }
+
+  private fun mapToAccountParams(accountParamsMap: ReadableMap): AccountParams {
+    return AccountParams(
+      name = accountParamsMap.getString("name") ?: "",
+      type = accountParamsMap.getString("type") ?: ""
+    )
+  }
+
+  private fun convertAccountsToWritableArray(accounts: Array<Account>): WritableNativeArray {
+    val result = WritableNativeArray()
+
+    for (account in accounts) {
+      val map = WritableNativeMap()
+      map.putString("name", account.name)
+      map.putString("type", account.type)
+      result.pushMap(map)
+    }
+
+    return result
   }
 }
