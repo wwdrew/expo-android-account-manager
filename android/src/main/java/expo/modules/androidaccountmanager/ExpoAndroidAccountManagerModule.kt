@@ -70,7 +70,7 @@ class ExpoAndroidAccountManagerModule : Module() {
       val accountParams = mapToAccountParams(accountParamsMap)
 
       if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank() || authToken.isBlank()) {
-        throw IllegalArgumentException("Account and password are required.")
+        throw IllegalArgumentException("Account, authTokenType and authToken are required.")
       }
 
       val accountManager = AccountManager.get(context)
@@ -83,7 +83,7 @@ class ExpoAndroidAccountManagerModule : Module() {
       val accountParams = mapToAccountParams(accountParamsMap)
 
       if (accountParams.name.isBlank() || accountParams.type.isBlank() || authTokenType.isBlank()) {
-        throw IllegalArgumentException("AccountParams and key are required.")
+        throw IllegalArgumentException("Account and authTokenType are required.")
       }
 
       val accountManager = AccountManager.get(context)
@@ -95,8 +95,8 @@ class ExpoAndroidAccountManagerModule : Module() {
     Function("setUserData") { accountParamsMap: ReadableMap, key: String, value: String ->
       val accountParams = mapToAccountParams(accountParamsMap)
 
-      if (accountParams.name.isBlank() || accountParams.type.isBlank() || key.isBlank() || value.isBlank()) {
-        throw IllegalArgumentException("Account and password are required.")
+      if (accountParams.name.isBlank() || accountParams.type.isBlank() || key.isBlank()) {
+        throw IllegalArgumentException("Account and key are required.")
       }
 
       val accountManager = AccountManager.get(context)
