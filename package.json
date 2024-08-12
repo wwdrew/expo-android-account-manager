@@ -1,6 +1,6 @@
 {
-  "name": "expo-android-account-manager",
-  "version": "0.1.0",
+  "name": "@wwdrew/expo-android-account-manager",
+  "version": "0.1.1",
   "description": "Expo Module for Android AccountManager",
   "main": "build/index.js",
   "types": "build/index.d.ts",
